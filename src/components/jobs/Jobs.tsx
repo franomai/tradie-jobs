@@ -1,8 +1,8 @@
-import { Box, Stack, Text } from '@chakra-ui/react';
+import { Box, Button, Stack, Text } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSelectedJob } from '../../redux/slices/JobManager.slice';
 import { setClientFilters, setVisibleJobs } from '../../redux/slices/Sorting.slice';
-import { useEffect, useMemo } from 'react';
+import { ReactNode, useEffect, useMemo, useState } from 'react';
 import { FilterOption } from '../tableheaders/Filterable';
 import { allValues } from '../../helpers/Utilities';
 import JobInfo, { Status } from '../../types/JobInfo';
@@ -14,6 +14,9 @@ import SearchBar from '../searchbar';
 import Client from '../../types/Client';
 import JobTable from './JobTable';
 import NoSelectedJob from './NoSelectedJob';
+import NewJob from './NewJob';
+
+type SidebarState = 'new' | 'edit';
 
 const statusFilterOptions: FilterOption<Status>[] = allValues(Status).map((status) => ({
     value: status,
@@ -23,6 +26,8 @@ const statusFilterOptions: FilterOption<Status>[] = allValues(Status).map((statu
 const Jobs = ({ allJobs, allClients }: { allJobs: Record<string, JobInfo>; allClients: Record<string, Client> }) => {
     const dispatch = useDispatch();
     const selectedJob = useSelector(getSelectedJob);
+
+    const [sidebarState, setSidebarState] = useState<SidebarState>('edit');
 
     const clientFilterOptions: FilterOption[] = useMemo(
         () =>
@@ -39,10 +44,25 @@ const Jobs = ({ allJobs, allClients }: { allJobs: Record<string, JobInfo>; allCl
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch]);
 
+    const renderSidebarContent = (): ReactNode => {
+        if (sidebarState === 'edit') {
+            return selectedJob ? <Job job={selectedJob} /> : <NoSelectedJob />;
+        }
+        return <NewJob />;
+    };
+
     return (
         <Stack h="100vh" alignItems="center">
             <Header>
                 <SearchBar placeholder="Search by name or id..." />
+                <Button
+                    variant="outline"
+                    color="white"
+                    _hover={{ color: 'blue.600', background: 'white' }}
+                    onClick={() => setSidebarState('new')}
+                >
+                    New Job
+                </Button>
             </Header>
             <Content>
                 <Stack direction="row" gap={2} my={5}>
@@ -52,7 +72,7 @@ const Jobs = ({ allJobs, allClients }: { allJobs: Record<string, JobInfo>; allCl
                         statusFilterOptions={statusFilterOptions}
                     />
                     <Box maxW="360px" minW="360px" h="full">
-                        {selectedJob ? <Job job={selectedJob} /> : <NoSelectedJob />}
+                        {renderSidebarContent()}
                     </Box>
                 </Stack>
             </Content>
