@@ -1,6 +1,8 @@
-import { Button, FormControl, FormErrorMessage, FormLabel, Input, Stack, Textarea } from '@chakra-ui/react';
+import { Button, Divider, FormControl, FormErrorMessage, FormLabel, Input, Stack, Textarea } from '@chakra-ui/react';
 import { useState } from 'react';
 import { Status } from '../../types/JobInfo';
+import NoteInfo from '../../types/NoteInfo';
+import Notes from '../notes';
 import StatusMenu from '../status/StatusMenu';
 
 interface FormValidations {
@@ -11,6 +13,7 @@ const NewJob = ({ handleDiscard }: { handleDiscard(): void }) => {
     const [title, setTitle] = useState('');
     const [status, setStatus] = useState(Status.Scheduled);
     const [description, setDescription] = useState('');
+    const [notes, setNotes] = useState<NoteInfo[]>([]);
     const [validations, setValidations] = useState<FormValidations>({});
 
     const handleChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,6 +29,19 @@ const NewJob = ({ handleDiscard }: { handleDiscard(): void }) => {
 
     const handleChangeDescription = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setDescription(e.target.value);
+    };
+
+    const handleSaveNote = (newNote: NoteInfo) => {
+        setNotes([newNote, ...notes]);
+    };
+
+    const handleUpdateNote = (noteIndex: number, newMessage: string) => {
+        setNotes(notes.map((note, index) => (index === noteIndex ? { ...note, message: newMessage } : note)));
+    };
+
+    const handleDeleteNote = (noteIndex: number) => {
+        notes.splice(noteIndex, 1);
+        setNotes([...notes]);
     };
 
     const handleSave = () => {
@@ -65,6 +81,13 @@ const NewJob = ({ handleDiscard }: { handleDiscard(): void }) => {
                     onChange={handleChangeDescription}
                 />
             </FormControl>
+            <Notes
+                notes={notes}
+                handleSave={handleSaveNote}
+                handleUpdate={handleUpdateNote}
+                handleDelete={handleDeleteNote}
+            />
+            <Divider borderColor="gray.400" />
             <Stack direction="row" w="full">
                 <Button variant="outline" colorScheme="blue" w="full" onClick={handleDiscard}>
                     Discard
