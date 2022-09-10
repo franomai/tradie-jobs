@@ -64,3 +64,15 @@ export function randomJob(): Omit<JobInfo, 'id'> {
         notes: randomNotes(),
     };
 }
+
+export function randomNewJob(clients: string[]): Omit<JobInfo, 'id' | 'created' | 'client'> & { client: string } {
+    const wordsInName = randBetween(2, 4);
+    const randomClient = clients[randint(clients.length - 1)];
+    return {
+        name: capitalise(lorem.generateWords(wordsInName)),
+        status: randomEnum(Status),
+        client: randomClient,
+        description: lorem.generateParagraphs(1),
+        notes: randomNotes(),
+    };
+}

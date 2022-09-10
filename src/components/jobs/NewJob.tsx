@@ -4,6 +4,7 @@ import {
     FormControl,
     FormErrorMessage,
     FormLabel,
+    Icon,
     IconButton,
     Input,
     Select,
@@ -18,6 +19,8 @@ import { Status } from '../../types/JobInfo';
 import NoteInfo from '../../types/NoteInfo';
 import Notes from '../notes';
 import StatusMenu from '../status/StatusMenu';
+import { FaRandom } from 'react-icons/fa';
+import { randomNewJob } from '../../data/DataPopulator';
 
 interface FormValidations {
     name?: string;
@@ -30,10 +33,19 @@ const NewJob = ({ handleClose }: { handleClose(): void }) => {
 
     const [name, setName] = useState('');
     const [status, setStatus] = useState(Status.Scheduled);
-    const [client, setClient] = useState<string>('');
+    const [client, setClient] = useState('');
     const [description, setDescription] = useState('');
     const [notes, setNotes] = useState<NoteInfo[]>([]);
     const [validations, setValidations] = useState<FormValidations>({});
+
+    const handleGenerateRandomData = () => {
+        const randomJob = randomNewJob(Object.keys(allClients));
+        setName(randomJob.name);
+        setStatus(randomJob.status);
+        setClient(randomJob.client);
+        setDescription(randomJob.description ?? '');
+        setNotes(randomJob.notes);
+    };
 
     const handleChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
         setName(e.target.value);
@@ -92,7 +104,8 @@ const NewJob = ({ handleClose }: { handleClose(): void }) => {
         }
 
         if (isValid) {
-            dispatch(addJob({ name, status, client: allClients[client], description, notes }));
+            const jobDescription = description.length === 0 ? undefined : description;
+            dispatch(addJob({ name, status, client: allClients[client], description: jobDescription, notes }));
             discardNewJob();
         } else {
             setValidations(validations);
@@ -101,18 +114,26 @@ const NewJob = ({ handleClose }: { handleClose(): void }) => {
 
     return (
         <Stack px={2} w="full" spacing={4}>
+            <Stack direction="row" justifyContent="end" alignItems="end" mb={-5}>
+                <IconButton
+                    aria-label="Generate random data"
+                    title="Generate random data"
+                    variant="ghost"
+                    size="sm"
+                    icon={<Icon as={FaRandom} />}
+                    onClick={handleGenerateRandomData}
+                />
+                <IconButton
+                    aria-label="Close new job pane"
+                    title="Close new job pane"
+                    variant="ghost"
+                    size="sm"
+                    icon={<CloseIcon />}
+                    onClick={handleClose}
+                />
+            </Stack>
             <FormControl isRequired isInvalid={validations.name !== undefined}>
-                <Stack direction="row" justifyContent="space-between" alignItems="end">
-                    <FormLabel>Name</FormLabel>
-                    <IconButton
-                        aria-label="Close new job pane"
-                        title="Close new job pane"
-                        variant="ghost"
-                        size="sm"
-                        icon={<CloseIcon />}
-                        onClick={handleClose}
-                    />
-                </Stack>
+                <FormLabel>Name</FormLabel>
                 <Input
                     variant="flushed"
                     fontSize="2xl"
@@ -153,11 +174,12 @@ const NewJob = ({ handleClose }: { handleClose(): void }) => {
                 handleUpdate={handleUpdateNote}
                 handleDelete={handleDeleteNote}
             />
+
             <Stack direction="row" w="full">
                 <Button variant="outline" colorScheme="blue" w="full" onClick={discardNewJob}>
                     Discard
                 </Button>
-                <Button type="submit" colorScheme="blue" w="full" onClick={handleSave}>
+                <Button colorScheme="blue" w="full" onClick={handleSave}>
                     Save
                 </Button>
             </Stack>

@@ -27,7 +27,9 @@ const Jobs = () => {
     }, [dispatch]);
 
     useEffect(() => {
-        setSidebarState('edit');
+        if (selectedJob !== null) {
+            setSidebarState('edit');
+        }
     }, [selectedJob]);
 
     const renderSidebarContent = (): ReactNode => {
