@@ -1,11 +1,11 @@
 import { Box, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
-import { allValues, darken } from '../../helpers/Utilities';
+import { allValues, asCssVar, darken } from '../../helpers/Utilities';
 import { Status } from '../../types/JobInfo';
 import StatusTag, { StatusColours } from './StatusTag';
 
 const StatusMenu = ({ status, handleChange }: { status: Status; handleChange(newStatus: Status): void }) => {
     return (
-        <Box>
+        <Box w="min" tabIndex={0} _focusVisible={{ outline: `${asCssVar('blue.500')} auto 2px` }}>
             <Menu>
                 <MenuButton
                     as={StatusTag}
