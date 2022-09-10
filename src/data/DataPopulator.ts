@@ -17,13 +17,15 @@ const lorem = new LoremIpsum({
 
 const earliestCreated = new Date('1 Sep 2022').getTime();
 
-const clients: Client[] = [
+export const clients: Client[] = [
     {
+        id: '1',
         clientCode: 'JJEF',
         name: 'Josh Jeffers',
         email: 'joshjeffers600@gmail.com',
     },
     {
+        id: '2',
         clientCode: 'FERG',
         name: 'Fergus Software',
         phone: '0800 461 219',

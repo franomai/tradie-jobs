@@ -24,7 +24,7 @@ export function generateJobId(state: State, client: Client): string {
 }
 
 const jobManagerSlice = createSlice({
-    name: 'jobmanager',
+    name: 'jobManager',
     initialState,
     reducers: {
         generateRandomJobs(state, action: { payload: number }) {

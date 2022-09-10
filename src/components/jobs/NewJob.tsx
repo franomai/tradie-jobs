@@ -1,4 +1,4 @@
-import { Button, Divider, FormControl, FormErrorMessage, FormLabel, Input, Stack, Textarea } from '@chakra-ui/react';
+import { Button, FormControl, FormErrorMessage, FormLabel, Input, Stack, Textarea } from '@chakra-ui/react';
 import { useState } from 'react';
 import { Status } from '../../types/JobInfo';
 import NoteInfo from '../../types/NoteInfo';
@@ -87,8 +87,7 @@ const NewJob = ({ handleDiscard }: { handleDiscard(): void }) => {
                 handleUpdate={handleUpdateNote}
                 handleDelete={handleDeleteNote}
             />
-            <Divider borderColor="gray.400" />
-            <Stack direction="row" w="full">
+            <Stack direction="row" w="full" pt={5}>
                 <Button variant="outline" colorScheme="blue" w="full" onClick={handleDiscard}>
                     Discard
                 </Button>
