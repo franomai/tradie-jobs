@@ -52,19 +52,21 @@ const Jobs = ({ allJobs, allClients }: { allJobs: Record<string, JobInfo>; allCl
     };
 
     return (
-        <Stack h="100vh" alignItems="center">
+        <Stack maxH="100vh" h="100vh" overflow="hidden" alignItems="center">
             <Header>
                 <SearchBar placeholder="Search by name or id..." />
-                <Button
-                    variant="outline"
-                    color="white"
-                    _hover={{ color: 'blue.600', background: 'white' }}
-                    onClick={() => setSidebarState('new')}
-                >
-                    New Job
-                </Button>
+                {sidebarState === 'edit' && (
+                    <Button
+                        variant="outline"
+                        color="white"
+                        _hover={{ color: 'blue.600', background: 'white' }}
+                        onClick={() => setSidebarState('new')}
+                    >
+                        New Job
+                    </Button>
+                )}
             </Header>
-            <Content>
+            <Content overflowY="auto">
                 <Stack direction="row" gap={2} my={5}>
                     <JobTable
                         allJobs={allJobs}
