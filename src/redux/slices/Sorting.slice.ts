@@ -5,13 +5,11 @@ import { Filters, SortingInfo } from '../../types/Sorting';
 import { StoreState } from '../Store';
 
 export interface State {
-    visibleJobs: string[];
     info: SortingInfo;
     filters: Filters;
 }
 
 export const initialState: State = {
-    visibleJobs: [],
     info: {
         direction: 'desc',
         by: 'created',
@@ -27,9 +25,6 @@ const sortingSlice = createSlice({
     name: 'sorting',
     initialState,
     reducers: {
-        setVisibleJobs(state, action: { payload: string[] }) {
-            state.visibleJobs = action.payload;
-        },
         setSorting(state, action: { payload: SortingInfo }) {
             state.info = action.payload;
         },
@@ -45,11 +40,9 @@ const sortingSlice = createSlice({
     },
 });
 
-export const { setVisibleJobs, setSorting, setSearchFilter, setStatusFilters, setClientFilters } = sortingSlice.actions;
+export const { setSorting, setSearchFilter, setStatusFilters, setClientFilters } = sortingSlice.actions;
 
 export const getSorting = (state: StoreState) => state.sorting.info;
-
-export const getVisibleJobs = (state: StoreState) => state.sorting.visibleJobs;
 
 export const getFilters = (state: StoreState) => state.sorting.filters;
 

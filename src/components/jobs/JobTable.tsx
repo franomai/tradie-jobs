@@ -2,16 +2,20 @@ import { IconButton, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } fro
 import { ReactNode, useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { allValues, capitalise } from '../../helpers/Utilities';
-import { deleteJob, getAllJobs, setSelectedJob } from '../../redux/slices/JobManager.slice';
+import {
+    deleteJob,
+    getAllJobs,
+    getVisibleJobs,
+    setSelectedJob,
+    setVisibleJobs,
+} from '../../redux/slices/JobManager.slice';
 import { Comparator, SortedBy, SortingInfo } from '../../types/Sorting';
 import {
     getFilters,
     getSorting,
-    getVisibleJobs,
     setClientFilters,
     setSorting,
     setStatusFilters,
-    setVisibleJobs,
 } from '../../redux/slices/Sorting.slice';
 import JobInfo, { Status } from '../../types/JobInfo';
 import StatusTag from '../status/StatusTag';
@@ -46,11 +50,15 @@ const JobTable = () => {
     const clientFilterOptions: FilterOption[] = useMemo(
         () =>
             Object.values(allClients).map((client) => ({
-                value: client.clientCode,
+                value: client.id,
                 render: <Text>{client.name}</Text>,
             })),
         [allClients],
     );
+
+    useEffect(() => {
+        dispatch(setClientFilters(Object.keys(allClients)));
+    }, [dispatch, allClients]);
 
     const applySorting = useCallback(
         (sorting: SortingInfo, visibleJobs: string[]) => {
@@ -82,7 +90,7 @@ const JobTable = () => {
             filteredJobs = filteredJobs.filter((id) => filters.client.includes(allJobs[id].client.clientCode));
         }
         applySorting(sorting, filteredJobs);
-    }, [filters, sorting, allJobs, statusFilterOptions.length, clientFilterOptions, applySorting]);
+    }, [filters, sorting, allJobs, clientFilterOptions, applySorting]);
 
     useEffect(() => {
         handleFilters();
@@ -93,7 +101,7 @@ const JobTable = () => {
         dispatch(setSorting(sorting));
     };
 
-    const renderJobRow = (jobId: string) => {
+    const renderJobRow = (jobId: string): ReactNode => {
         const job = allJobs[jobId];
 
         return (

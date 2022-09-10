@@ -9,12 +9,14 @@ export interface State {
     jobIdCounter: number;
     jobs: Record<string, JobInfo>;
     selectedJob: string | null;
+    visibleJobs: string[];
 }
 
 export const initialState: State = {
     jobIdCounter: 0,
     jobs: {},
     selectedJob: null,
+    visibleJobs: [],
 };
 
 export function generateJobId(state: State, client: Client): string {
@@ -41,12 +43,18 @@ const jobManagerSlice = createSlice({
                 if (state.selectedJob === action.payload) {
                     state.selectedJob = null;
                 }
+                if (state.visibleJobs.includes(action.payload)) {
+                    state.visibleJobs = state.visibleJobs.filter((jobId) => jobId !== action.payload);
+                }
             }
         },
         setSelectedJob(state, action: { payload: string }) {
             if (state.jobs[action.payload]) {
                 state.selectedJob = action.payload;
             }
+        },
+        setVisibleJobs(state, action: { payload: string[] }) {
+            state.visibleJobs = action.payload;
         },
         addNote(state, action: { payload: NoteInfo }) {
             if (state.selectedJob !== null) {
@@ -78,12 +86,14 @@ const jobManagerSlice = createSlice({
     },
 });
 
-export const { addJob, deleteJob, setSelectedJob, addNote, updateNote, deleteNote, updateStatus } =
+export const { addJob, deleteJob, setSelectedJob, setVisibleJobs, addNote, updateNote, deleteNote, updateStatus } =
     jobManagerSlice.actions;
 
 export const getAllJobs = (state: StoreState) => state.jobManager.jobs;
 
 export const getSelectedJob = (state: StoreState) =>
     state.jobManager.selectedJob === null ? null : state.jobManager.jobs[state.jobManager.selectedJob];
+
+export const getVisibleJobs = (state: StoreState) => state.jobManager.visibleJobs;
 
 export default jobManagerSlice.reducer;
