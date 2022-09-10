@@ -44,11 +44,15 @@ const Jobs = ({ allJobs, allClients }: { allJobs: Record<string, JobInfo>; allCl
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch]);
 
+    useEffect(() => {
+        setSidebarState('edit');
+    }, [selectedJob]);
+
     const renderSidebarContent = (): ReactNode => {
         if (sidebarState === 'edit') {
             return selectedJob ? <Job job={selectedJob} /> : <NoSelectedJob />;
         }
-        return <NewJob closeNewJob={() => setSidebarState('edit')} />;
+        return <NewJob handleClose={() => setSidebarState('edit')} />;
     };
 
     return (

@@ -24,7 +24,7 @@ interface FormValidations {
     client?: string;
 }
 
-const NewJob = ({ closeNewJob }: { closeNewJob(): void }) => {
+const NewJob = ({ handleClose }: { handleClose(): void }) => {
     const dispatch = useDispatch();
     const allClients = useSelector(getAllClients);
 
@@ -70,6 +70,15 @@ const NewJob = ({ closeNewJob }: { closeNewJob(): void }) => {
         setNotes([...notes]);
     };
 
+    const discardNewJob = () => {
+        setName('');
+        setStatus(Status.Scheduled);
+        setClient('');
+        setDescription('');
+        setNotes([]);
+        setValidations({});
+    };
+
     const handleSave = () => {
         let isValid = true;
         const validations: FormValidations = {};
@@ -84,6 +93,7 @@ const NewJob = ({ closeNewJob }: { closeNewJob(): void }) => {
 
         if (isValid) {
             dispatch(addJob({ name, status, client: allClients[client], description, notes }));
+            discardNewJob();
         } else {
             setValidations(validations);
         }
@@ -100,7 +110,7 @@ const NewJob = ({ closeNewJob }: { closeNewJob(): void }) => {
                         variant="ghost"
                         size="sm"
                         icon={<CloseIcon />}
-                        onClick={closeNewJob}
+                        onClick={handleClose}
                     />
                 </Stack>
                 <Input
@@ -144,7 +154,7 @@ const NewJob = ({ closeNewJob }: { closeNewJob(): void }) => {
                 handleDelete={handleDeleteNote}
             />
             <Stack direction="row" w="full">
-                <Button variant="outline" colorScheme="blue" w="full" onClick={closeNewJob}>
+                <Button variant="outline" colorScheme="blue" w="full" onClick={discardNewJob}>
                     Discard
                 </Button>
                 <Button type="submit" colorScheme="blue" w="full" onClick={handleSave}>
