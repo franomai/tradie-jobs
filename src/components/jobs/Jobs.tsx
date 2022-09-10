@@ -19,7 +19,7 @@ const Jobs = () => {
     const allClients = useSelector(getAllClients);
     const selectedJob = useSelector(getSelectedJob);
 
-    const [sidebarState, setSidebarState] = useState<SidebarState>('edit');
+    const [sidebarState, setSidebarState] = useState<SidebarState>('new');
 
     useEffect(() => {
         dispatch(setClientFilters(Object.keys(allClients)));
