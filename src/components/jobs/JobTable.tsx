@@ -1,8 +1,8 @@
-import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
-import { ReactNode, useCallback, useEffect } from 'react';
+import { IconButton, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react';
+import { ReactNode, useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { capitalise } from '../../helpers/Utilities';
-import { setSelectedJob } from '../../redux/slices/JobManager.slice';
+import { allValues, capitalise } from '../../helpers/Utilities';
+import { deleteJob, getAllJobs, setSelectedJob } from '../../redux/slices/JobManager.slice';
 import { Comparator, SortedBy, SortingInfo } from '../../types/Sorting';
 import {
     getFilters,
@@ -17,6 +17,8 @@ import JobInfo, { Status } from '../../types/JobInfo';
 import StatusTag from '../status/StatusTag';
 import Filterable, { FilterOption } from '../tableheaders/Filterable';
 import Sortable from '../tableheaders/Sortable';
+import { DeleteIcon } from '@chakra-ui/icons';
+import { getAllClients } from '../../redux/slices/ClientManager.slice';
 
 type TableColumn = { property: SortedBy; label?: string };
 
@@ -28,19 +30,27 @@ const comparators: Record<SortedBy, Comparator<JobInfo>> = {
     client: (a, b) => -a.client.name.localeCompare(b.client.name),
 };
 
-const JobTable = ({
-    allJobs,
-    clientFilterOptions,
-    statusFilterOptions,
-}: {
-    allJobs: Record<string, JobInfo>;
-    clientFilterOptions: FilterOption[];
-    statusFilterOptions: FilterOption<Status>[];
-}) => {
+const statusFilterOptions: FilterOption<Status>[] = allValues(Status).map((status) => ({
+    value: status,
+    render: <StatusTag status={status} />,
+}));
+
+const JobTable = () => {
     const dispatch = useDispatch();
+    const allJobs = useSelector(getAllJobs);
+    const allClients = useSelector(getAllClients);
     const visibleJobs = useSelector(getVisibleJobs);
     const sorting = useSelector(getSorting);
     const filters = useSelector(getFilters);
+
+    const clientFilterOptions: FilterOption[] = useMemo(
+        () =>
+            Object.values(allClients).map((client) => ({
+                value: client.clientCode,
+                render: <Text>{client.name}</Text>,
+            })),
+        [allClients],
+    );
 
     const applySorting = useCallback(
         (sorting: SortingInfo, visibleJobs: string[]) => {
@@ -76,7 +86,7 @@ const JobTable = ({
 
     useEffect(() => {
         handleFilters();
-    }, [filters, handleFilters]);
+    }, [allJobs, filters, handleFilters]);
 
     const handleChangeSort = (sorting: SortingInfo) => {
         applySorting(sorting, [...visibleJobs]);
@@ -94,6 +104,20 @@ const JobTable = ({
                 <Td py={2}>{job.id}</Td>
                 <Td py={2}>{job.name}</Td>
                 <Td py={2}>{job.client.name}</Td>
+                <Td py={2} px={2}>
+                    <IconButton
+                        aria-label="Delete job"
+                        title="Delete job"
+                        size="sm"
+                        variant="ghost"
+                        icon={<DeleteIcon />}
+                        _hover={{
+                            color: 'red.500',
+                            bg: 'red.100',
+                        }}
+                        onClick={() => dispatch(deleteJob(jobId))}
+                    />
+                </Td>
             </Tr>
         );
     };
@@ -134,6 +158,7 @@ const JobTable = ({
                                 {renderColumnLabel({ property: 'client' })}
                             </Filterable>
                         </Th>
+                        <Th py={2} />
                     </Tr>
                 </Thead>
                 <Tbody>{visibleJobs.map(renderJobRow)}</Tbody>

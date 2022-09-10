@@ -1,12 +1,8 @@
-import { Box, Button, Stack, Text } from '@chakra-ui/react';
+import { Box, Button, Stack } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSelectedJob } from '../../redux/slices/JobManager.slice';
-import { setClientFilters, setVisibleJobs } from '../../redux/slices/Sorting.slice';
-import { ReactNode, useEffect, useMemo, useState } from 'react';
-import { FilterOption } from '../tableheaders/Filterable';
-import { allValues } from '../../helpers/Utilities';
-import JobInfo, { Status } from '../../types/JobInfo';
-import StatusTag from '../status/StatusTag';
+import { setClientFilters } from '../../redux/slices/Sorting.slice';
+import { ReactNode, useEffect, useState } from 'react';
 import Job from './Job';
 import Content from '../Content';
 import Header from '../header';
@@ -18,29 +14,14 @@ import { getAllClients } from '../../redux/slices/ClientManager.slice';
 
 type SidebarState = 'new' | 'edit';
 
-const statusFilterOptions: FilterOption<Status>[] = allValues(Status).map((status) => ({
-    value: status,
-    render: <StatusTag status={status} />,
-}));
-
-const Jobs = ({ allJobs }: { allJobs: Record<string, JobInfo> }) => {
+const Jobs = () => {
     const dispatch = useDispatch();
     const allClients = useSelector(getAllClients);
     const selectedJob = useSelector(getSelectedJob);
 
     const [sidebarState, setSidebarState] = useState<SidebarState>('edit');
 
-    const clientFilterOptions: FilterOption[] = useMemo(
-        () =>
-            Object.values(allClients).map((client) => ({
-                value: client.clientCode,
-                render: <Text>{client.name}</Text>,
-            })),
-        [allClients],
-    );
-
     useEffect(() => {
-        dispatch(setVisibleJobs(Object.keys(allJobs)));
         dispatch(setClientFilters(Object.keys(allClients)));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch]);
@@ -73,11 +54,7 @@ const Jobs = ({ allJobs }: { allJobs: Record<string, JobInfo> }) => {
             </Header>
             <Content overflowY="auto">
                 <Stack direction="row" gap={2} my={5}>
-                    <JobTable
-                        allJobs={allJobs}
-                        clientFilterOptions={clientFilterOptions}
-                        statusFilterOptions={statusFilterOptions}
-                    />
+                    <JobTable />
                     <Box maxW="360px" minW="360px" h="full">
                         {renderSidebarContent()}
                     </Box>

@@ -27,15 +27,6 @@ const jobManagerSlice = createSlice({
     name: 'jobManager',
     initialState,
     reducers: {
-        generateRandomJobs(state, action: { payload: number }) {
-            Array(action.payload)
-                .fill(null)
-                .forEach(() => {
-                    const generatedJob = randomJob();
-                    const job = { ...generatedJob, id: generateJobId(state, generatedJob.client) };
-                    state.jobs[job.id] = job;
-                });
-        },
         addJob(state, action: { payload: Omit<JobInfo, 'id' | 'created'> }) {
             const newJob = {
                 ...action.payload,
@@ -43,6 +34,14 @@ const jobManagerSlice = createSlice({
                 created: new Date().getTime(),
             };
             state.jobs[newJob.id] = newJob;
+        },
+        deleteJob(state, action: { payload: string }) {
+            if (state.jobs[action.payload]) {
+                delete state.jobs[action.payload];
+                if (state.selectedJob === action.payload) {
+                    state.selectedJob = null;
+                }
+            }
         },
         setSelectedJob(state, action: { payload: string }) {
             if (state.jobs[action.payload]) {
@@ -79,7 +78,7 @@ const jobManagerSlice = createSlice({
     },
 });
 
-export const { generateRandomJobs, addJob, setSelectedJob, addNote, updateNote, deleteNote, updateStatus } =
+export const { addJob, deleteJob, setSelectedJob, addNote, updateNote, deleteNote, updateStatus } =
     jobManagerSlice.actions;
 
 export const getAllJobs = (state: StoreState) => state.jobManager.jobs;
