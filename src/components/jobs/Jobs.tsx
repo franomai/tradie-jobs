@@ -48,7 +48,7 @@ const Jobs = ({ allJobs, allClients }: { allJobs: Record<string, JobInfo>; allCl
         if (sidebarState === 'edit') {
             return selectedJob ? <Job job={selectedJob} /> : <NoSelectedJob />;
         }
-        return <NewJob />;
+        return <NewJob handleDiscard={() => setSidebarState('edit')} />;
     };
 
     return (
