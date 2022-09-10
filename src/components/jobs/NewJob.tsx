@@ -1,4 +1,15 @@
-import { Button, FormControl, FormErrorMessage, FormLabel, Input, Select, Stack, Textarea } from '@chakra-ui/react';
+import { CloseIcon } from '@chakra-ui/icons';
+import {
+    Button,
+    FormControl,
+    FormErrorMessage,
+    FormLabel,
+    IconButton,
+    Input,
+    Select,
+    Stack,
+    Textarea,
+} from '@chakra-ui/react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllClients } from '../../redux/slices/ClientManager.slice';
@@ -81,8 +92,16 @@ const NewJob = ({ closeNewJob }: { closeNewJob(): void }) => {
     return (
         <Stack px={2} w="full" spacing={4}>
             <FormControl isRequired isInvalid={validations.name !== undefined}>
-                <Stack>
+                <Stack direction="row" justifyContent="space-between" alignItems="end">
                     <FormLabel>Name</FormLabel>
+                    <IconButton
+                        aria-label="Close new job pane"
+                        title="Close new job pane"
+                        variant="ghost"
+                        size="sm"
+                        icon={<CloseIcon />}
+                        onClick={closeNewJob}
+                    />
                 </Stack>
                 <Input
                     variant="flushed"
