@@ -11,10 +11,10 @@ import Job from './Job';
 import Content from '../Content';
 import Header from '../header';
 import SearchBar from '../searchbar';
-import Client from '../../types/Client';
 import JobTable from './JobTable';
 import NoSelectedJob from './NoSelectedJob';
 import NewJob from './NewJob';
+import { getAllClients } from '../../redux/slices/ClientManager.slice';
 
 type SidebarState = 'new' | 'edit';
 
@@ -23,8 +23,9 @@ const statusFilterOptions: FilterOption<Status>[] = allValues(Status).map((statu
     render: <StatusTag status={status} />,
 }));
 
-const Jobs = ({ allJobs, allClients }: { allJobs: Record<string, JobInfo>; allClients: Record<string, Client> }) => {
+const Jobs = ({ allJobs }: { allJobs: Record<string, JobInfo> }) => {
     const dispatch = useDispatch();
+    const allClients = useSelector(getAllClients);
     const selectedJob = useSelector(getSelectedJob);
 
     const [sidebarState, setSidebarState] = useState<SidebarState>('edit');

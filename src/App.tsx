@@ -5,7 +5,6 @@ import Jobs from './components/jobs/Jobs';
 import { clients } from './data/DataPopulator';
 import { addAllClients } from './redux/slices/ClientManager.slice';
 import { generateRandomJobs, getAllJobs } from './redux/slices/JobManager.slice';
-import Client from './types/Client';
 
 const App = () => {
     const dispatch = useDispatch();
@@ -21,14 +20,7 @@ const App = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch]);
 
-    const allClients: Record<string, Client> = {};
-    [...new Set(Object.values(allJobs).map((job) => job.client))].forEach((job) => (allClients[job.clientCode] = job));
-
-    return (
-        <ChakraProvider>
-            {Object.keys(allJobs).length !== 0 && <Jobs allJobs={allJobs} allClients={allClients} />}
-        </ChakraProvider>
-    );
+    return <ChakraProvider>{Object.keys(allJobs).length !== 0 && <Jobs allJobs={allJobs} />}</ChakraProvider>;
 };
 
 export default App;
