@@ -106,12 +106,6 @@ const JobTable = () => {
 
         return (
             <Tr key={jobId} onClick={() => dispatch(setSelectedJob(jobId))} sx={{ _hover: { bg: 'gray.100' } }}>
-                <Td py={2}>
-                    <StatusTag status={job.status} />
-                </Td>
-                <Td py={2}>{job.id}</Td>
-                <Td py={2}>{job.name}</Td>
-                <Td py={2}>{job.client.name}</Td>
                 <Td py={2} px={2}>
                     <IconButton
                         aria-label="Delete job"
@@ -126,6 +120,12 @@ const JobTable = () => {
                         onClick={() => dispatch(deleteJob(jobId))}
                     />
                 </Td>
+                <Td py={2}>
+                    <StatusTag status={job.status} />
+                </Td>
+                <Td py={2}>{job.id}</Td>
+                <Td py={2}>{job.name}</Td>
+                <Td py={2}>{job.client.name}</Td>
             </Tr>
         );
     };
@@ -146,6 +146,7 @@ const JobTable = () => {
             <Table variant="simple" size="md">
                 <Thead>
                     <Tr>
+                        <Th py={2} />
                         <Th py={2} w="170px">
                             <Filterable
                                 filters={filters.status}
@@ -166,7 +167,6 @@ const JobTable = () => {
                                 {renderColumnLabel({ property: 'client' })}
                             </Filterable>
                         </Th>
-                        <Th py={2} />
                     </Tr>
                 </Thead>
                 <Tbody>{visibleJobs.map(renderJobRow)}</Tbody>
