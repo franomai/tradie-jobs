@@ -10,28 +10,26 @@ import {
     useEditableControls,
 } from '@chakra-ui/react';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { deleteNote, updateNote } from '../../redux/slices/JobManager.slice';
 
-const Note = ({ index, note }: { index: number; note: NoteInfo }) => {
-    const dispatch = useDispatch();
+const Note = ({
+    index,
+    note,
+    handleUpdate,
+    handleDelete,
+}: {
+    index: number;
+    note: NoteInfo;
+    handleUpdate(noteIndex: number, newMessage: string): void;
+    handleDelete(noteIndex: number): void;
+}) => {
     const [newValue, setNewValue] = useState(note.message);
-
-    const handleUpdateMessage = (newMessage: string) => {
-        dispatch(updateNote({ noteIndex: index, newMessage }));
-    };
-
-    const handleDelete = () => {
-        dispatch(deleteNote(index));
-    };
 
     return (
         <Editable
-            itemRef=""
             defaultValue={newValue}
             isPreviewFocusable={false}
             onChange={(value) => setNewValue(value)}
-            onSubmit={handleUpdateMessage}
+            onSubmit={(newMessage) => handleUpdate(index, newMessage)}
         >
             <Stack direction="row" justifyContent="space-between">
                 <EditablePreview
@@ -43,7 +41,7 @@ const Note = ({ index, note }: { index: number; note: NoteInfo }) => {
                     whiteSpace="pre-wrap"
                 />
                 <EditableTextarea px={2} />
-                <EditableControls canSave={newValue.trim().length !== 0} handleDelete={handleDelete} />
+                <EditableControls canSave={newValue.trim().length !== 0} handleDelete={() => handleDelete(index)} />
             </Stack>
         </Editable>
     );
