@@ -1,4 +1,4 @@
-# Tradie Jobs 
+# Tradie Jobs
 
 The frontend for a job management web application that enables tradies to view jobs, add/edit notes and filter/sort the jobs. This was designed as part of the Fergus frontend technical assessment.
 
@@ -20,6 +20,7 @@ The UI is populated using 10 randomly generated jobs. These jobs will be regener
 It is recommended that you run this website using yarn. You can install it using: `npm i -g yarn`.
 
 After cloning the repository, you can start it with:
+
 ```sh
 yarn install # Or npm install
 yarn start # Or npm run start
@@ -30,7 +31,7 @@ yarn start # Or npm run start
 **Main UI**
 
 ![No Selected Job](./screenshots/NoSelectedJob.png)
-![No Selected Job](./screenshots/SelectedJob.png)
+![Selected Job](./screenshots/SelectedJob.png)
 
 **Sorting / Filtering**
 

@@ -1,5 +1,6 @@
 import { CloseIcon } from '@chakra-ui/icons';
 import {
+    Box,
     Button,
     FormControl,
     FormErrorMessage,
@@ -114,26 +115,28 @@ const NewJob = ({ handleClose }: { handleClose(): void }) => {
 
     return (
         <Stack px={2} w="full" spacing={4}>
-            <Stack direction="row" justifyContent="end" alignItems="end" mb={-5}>
-                <IconButton
-                    aria-label="Generate random data"
-                    title="Generate random data"
-                    variant="ghost"
-                    size="sm"
-                    icon={<Icon as={FaRandom} />}
-                    onClick={handleGenerateRandomData}
-                />
-                <IconButton
-                    aria-label="Close new job pane"
-                    title="Close new job pane"
-                    variant="ghost"
-                    size="sm"
-                    icon={<CloseIcon />}
-                    onClick={handleClose}
-                />
-            </Stack>
             <FormControl isRequired isInvalid={validations.name !== undefined}>
-                <FormLabel>Name</FormLabel>
+                <Stack direction="row" justifyContent="space-between" alignItems="end">
+                    <FormLabel>Name</FormLabel>
+                    <Box>
+                        <IconButton
+                            aria-label="Generate random data"
+                            title="Generate random data"
+                            variant="ghost"
+                            size="sm"
+                            icon={<Icon as={FaRandom} />}
+                            onClick={handleGenerateRandomData}
+                        />
+                        <IconButton
+                            aria-label="Close new job pane"
+                            title="Close new job pane"
+                            variant="ghost"
+                            size="sm"
+                            icon={<CloseIcon />}
+                            onClick={handleClose}
+                        />
+                    </Box>
+                </Stack>
                 <Input
                     variant="flushed"
                     fontSize="2xl"
