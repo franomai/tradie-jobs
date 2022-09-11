@@ -21,8 +21,8 @@ It is recommended that you run this website using yarn. You can install it using
 
 After cloning the repository, you can start it with:
 ```sh
-yarn install
-yarn start
+yarn install # Or npm install
+yarn start # Or npm run start
 ```
 
 ## Examples
